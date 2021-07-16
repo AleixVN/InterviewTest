@@ -113,16 +113,24 @@ public class DefaultEventManagerTest
     }
 
     @Test
-    public void testParentsDoNotReceiveEventNotification() {
+    public void testParentsReceiveEventNotification() {
         EventListenerMock simpleEventListenerMock = new EventListenerMock(new Class[]{SimpleEvent.class});
         eventManager.registerListener("simple.key", simpleEventListenerMock);
 
         eventManager.publishEvent(new SubEvent(this));
-        assertFalse(simpleEventListenerMock.isCalled());
+        assertTrue(simpleEventListenerMock.isCalled());
+        simpleEventListenerMock.resetCalled();
+
+        EventListenerMock subEventListenerMock = new EventListenerMock(new Class[]{SubEvent.class});
+        eventManager.registerListener("sub.key", subEventListenerMock);
+
+        eventManager.publishEvent(new SubEvent(this));
+        assertTrue(simpleEventListenerMock.isCalled());
+        assertTrue(subEventListenerMock.isCalled());
     }
 
     @Test
-    public void emptyEventsArrayListenerShouldListenToAllEvents() {
+    public void testEmptyEventsArrayListenerShouldListenToAllEvents() {
         EventListenerMock allEventsEventListenerMock = new EventListenerMock(new Class[]{});
         eventManager.registerListener("all.key", allEventsEventListenerMock);
 
