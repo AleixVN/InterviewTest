@@ -3,6 +3,9 @@ package com.strands.interviews.eventsystem.impl;
 import com.strands.interviews.eventsystem.EventManager;
 import com.strands.interviews.eventsystem.InterviewEvent;
 import com.strands.interviews.eventsystem.InterviewEventListener;
+import com.strands.interviews.eventsystem.events.CreationEvent;
+import com.strands.interviews.eventsystem.events.SimpleEvent;
+import com.strands.interviews.eventsystem.events.SubEvent;
 
 import java.util.*;
 
@@ -47,6 +50,9 @@ public class DefaultEventManager implements EventManager
             unregisterListener(listenerKey);
 
         Class[] classes = listener.getHandledEventClasses();
+
+        if (classes.length == 0)
+            classes = new Class[]{SimpleEvent.class, SubEvent.class, CreationEvent.class};
 
         for (int i = 0; i < classes.length; i++)
             addToListenerList(classes[i], listener);
